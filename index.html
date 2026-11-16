@@ -70,9 +70,9 @@ h2.reset em{transition:none!important}
 .hero-grid{display:grid;gap:48px;align-items:center}
 @media (min-width:900px){.hero-grid{grid-template-columns:1.35fr .65fr}}
 .hero h1{font-size:clamp(48px,5.4vw,70px);margin-bottom:26px}
-.hero h1 span{display:block;white-space:nowrap}
+.hero h1>span{display:block;white-space:nowrap}
 .hero h1 .o{color:var(--orange)}
-@media (max-width:600px){.hero h1 span{white-space:normal}}
+@media (max-width:600px){.hero h1>span{white-space:normal}}
 .hero p.t{font-size:clamp(17px,1.8vw,19px);color:#555;max-width:44ch}
 .hero .btns{margin-top:32px}
 .fan{position:relative;height:clamp(280px,32vw,380px);max-width:380px;width:100%;margin:0 auto}
@@ -174,7 +174,7 @@ footer nav a:hover{color:var(--orange)}
   <div class="corner" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div>
-      <h1 class="rv"><span>Endlich lösbare</span><span class="o">Probleme.</span></h1>
+      <h1 class="rv"><span>Endlich <span class="o">lösbare</span></span><span>Probleme.</span></h1>
       <p class="t rv">Normalerweise will man Probleme loswerden. Hier sind sie das Programm.<br>Für alle, die gern knobeln, und für alle, die glauben, sie könnten es nicht.<br>Jeden Tag neu auf Instagram, YouTube, Facebook und Pinterest.</p>
       <div class="btns rv">
         <a class="btn" href="#raetsel">Rätsel ausprobieren <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
