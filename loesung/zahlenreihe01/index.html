@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Auflösung: Zahlenreihe 01 – 9x KLUG</title>
+<meta name="description" content="Auflösung und Lösungsweg zum Rätsel Zahlenreihe 01 von 9x KLUG. Endlich lösbare Probleme.">
+<meta name="theme-color" content="#ffffff">
+<style>
+@font-face{font-family:Anton;src:url(../../assets/Anton-Regular.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Inter;src:url(../../assets/Inter-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Inter;src:url(../../assets/Inter-SemiBold.woff2) format("woff2");font-weight:600;font-display:swap}
+:root{--ink:#111;--muted:#6b6b6b;--line:#e4e4e4;--orange:#F05A28;--pad:clamp(20px,5vw,40px);--max:1080px;--ease:cubic-bezier(.2,.7,.2,1);--shadow:0 1px 2px rgba(0,0,0,.06),0 14px 34px -14px rgba(0,0,0,.28)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:#fff;color:var(--ink);font:400 17px/1.6 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{position:relative;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.mark{font-family:Anton,sans-serif;font-weight:400;line-height:1;letter-spacing:.01em}
+.mark b{font-weight:400;color:var(--orange)}
+.caps{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.shot{border-radius:4px;box-shadow:var(--shadow)}
+
+/* Buttons: eckig, Großbuchstaben */
+.btn{display:inline-flex;align-items:center;gap:14px;height:54px;padding:0 24px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;transition:background .2s}
+.btn svg{transition:transform .25s var(--ease)}
+.btn:hover{background:var(--orange)}
+.btn:hover svg{transform:translateX(4px)}
+.lnk{display:inline-flex;align-items:center;height:54px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.lnk span{border-bottom:3px solid var(--ink);padding-bottom:3px;transition:color .2s,border-color .2s}
+.lnk:hover span{color:var(--orange);border-color:var(--orange)}
+.btns{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px}
+
+/* Kopfzeile */
+.top{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid transparent;transition:border-color .3s}
+.top.scrolled{border-color:var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.top .mark{font-size:24px}
+.nav{display:flex;gap:26px}
+.nav a{transition:color .2s}.nav a:hover{color:var(--orange)}
+@media (max-width:480px){.nav{gap:16px;letter-spacing:.1em}}
+
+/* Bereiche im Buchstil */
+section{position:relative;scroll-margin-top:64px;padding:clamp(56px,8vw,104px) 0}
+.side{position:absolute;left:calc(var(--pad) - 34px);top:0;writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#9a9a9a}
+@media (max-width:1180px){.side{display:none}}
+.sh{display:flex;align-items:center;gap:14px;border-top:3px solid var(--ink);padding-top:14px;margin-bottom:18px}
+.sh .no{display:grid;place-items:center;min-width:34px;height:34px;background:var(--ink);color:#fff;font-family:Anton,sans-serif;font-size:16px;letter-spacing:.04em;font-weight:400}
+.sh .r{margin-left:auto;color:var(--muted);font-weight:400;text-align:right}
+.blk{background:var(--ink);color:#fff;padding:clamp(22px,3.4vw,36px) clamp(22px,3.4vw,40px)}
+h1,h2{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:1.14}
+h2{font-size:clamp(36px,5vw,60px)}
+h2 em{white-space:nowrap;font-style:normal;color:var(--ink);padding:0 .1em;margin:0 -.03em;-webkit-box-decoration-break:clone;box-decoration-break:clone;background:linear-gradient(var(--orange),var(--orange)) no-repeat 0 58%/0% 60%;transition:background-size .7s cubic-bezier(.6,0,.2,1) .45s}
+h2.mk em{background-size:100% 60%}
+h2.reset em{transition:none!important}
+.sub{display:flex;align-items:center;gap:14px;margin-top:16px;font-size:15px;color:var(--muted)}
+.sub::before{content:"";width:40px;height:3px;background:var(--ink);flex:none}
+.p-info{display:grid;gap:24px;margin-bottom:32px;align-items:end}
+@media (min-width:1000px){.p-info{grid-template-columns:max-content max-content;gap:48px;justify-content:start}.p-info b,.p-info .p-title{white-space:nowrap}}
+.pfoot b{display:block;font-family:Anton,sans-serif;font-weight:400;font-size:clamp(26px,2.4vw,32px);line-height:1.1;color:var(--orange);text-transform:uppercase}
+.pfoot small{display:block;margin-top:4px}
+
+/* 1 Marke */
+.hero{padding:clamp(36px,6vw,80px) 0 clamp(56px,8vw,96px);overflow:hidden}
+.corner{position:absolute;right:0;top:0;width:clamp(70px,10vw,140px);aspect-ratio:1;background:var(--ink);clip-path:polygon(0 0,100% 0,100% 100%)}
+.hero-grid{display:grid;gap:48px;align-items:center}
+@media (min-width:900px){.hero-grid{grid-template-columns:1.35fr .65fr}}
+.hero h1{font-size:clamp(48px,5.4vw,70px);margin-bottom:26px}
+.hero h1>span{display:block;white-space:nowrap}
+.hero h1 .o{color:var(--orange)}
+@media (max-width:600px){.hero h1>span{white-space:normal}}
+.hero p.t{font-size:clamp(17px,1.8vw,19px);color:#555;max-width:44ch}
+.hero .btns{margin-top:32px}
+.fan{position:relative;height:clamp(280px,32vw,380px);max-width:380px;width:100%;margin:0 auto}
+.fan a{position:absolute;top:50%;left:50%;width:58%;transition:transform .4s var(--ease)}
+.fan a img{width:100%}
+.fan a:nth-child(1){transform:translate(-90%,-50%) rotate(-8deg)}
+.fan a:nth-child(2){transform:translate(-10%,-50%) rotate(8deg)}
+.fan a:nth-child(3){transform:translate(-50%,-52%);z-index:2}
+.fan a:nth-child(1):hover{transform:translate(-90%,-56%) rotate(-8deg)}
+.fan a:nth-child(2):hover{transform:translate(-10%,-56%) rotate(8deg)}
+.fan a:nth-child(3):hover{transform:translate(-50%,-58%)}
+
+/* 2 Rätsel */
+.p-grid{display:grid;gap:36px;align-items:center;margin-top:clamp(36px,5vw,56px)}
+@media (min-width:900px){.p-grid{grid-template-columns:380px 1fr;gap:64px}}
+.viewer{position:relative;width:100%;max-width:380px;margin:0 auto}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:4px;box-shadow:var(--shadow)}
+.track::-webkit-scrollbar{display:none}
+.track img{flex:0 0 100%;width:100%;scroll-snap-align:center}
+.arrow{position:absolute;top:50%;width:44px;height:44px;margin-top:-22px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center;transition:color .2s}
+.arrow:hover{color:var(--orange)}
+.arrow.prev{left:-22px}.arrow.next{right:-22px}
+.arrow[disabled]{opacity:0;pointer-events:none}
+@media (max-width:480px){.arrow.prev{left:8px}.arrow.next{right:8px}}
+.vdots{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.vdots i{width:8px;height:8px;border-radius:50%;background:#d6d6d6;transition:background .2s}
+.vdots i.on{background:var(--orange)}
+.p-count{color:var(--muted);margin-bottom:10px}
+.p-title{font-family:Anton,sans-serif;font-size:clamp(26px,2.4vw,32px);text-transform:uppercase;line-height:1.1}
+
+/* 3 Buch */
+.book-grid{display:grid;gap:48px;align-items:start;margin-top:clamp(36px,5vw,56px)}
+@media (min-width:900px){.book-grid{grid-template-columns:360px 1fr;gap:72px}}
+.book-cover{width:80%;max-width:340px;margin:0 auto}
+.book p{color:var(--muted);max-width:54ch;margin-bottom:14px}
+.book p strong{color:var(--ink);font-weight:600}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);margin:28px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.nums div{padding:14px 12px 14px 0}
+.nums div+div{border-left:1px solid var(--line);padding-left:16px}
+.nums b{display:block;font-family:Anton,sans-serif;font-weight:400;font-size:clamp(34px,4vw,46px);line-height:1.1}
+.nums span{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.book .btns{margin-top:28px}
+.pages-h{display:flex;justify-content:space-between;align-items:center;margin-top:clamp(56px,7vw,80px);padding-bottom:12px;border-bottom:1px solid var(--ink)}
+.pages{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+@media (min-width:760px){.pages{grid-template-columns:repeat(7,1fr);gap:16px}}
+.pages button{display:block;transition:transform .3s var(--ease)}
+.pages button:hover{transform:translateY(-4px)}
+.pages img{border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 20px -10px rgba(0,0,0,.35)}
+
+/* 4 Kanäle */
+.ch-list{margin-top:clamp(28px,4vw,40px);border-top:1px solid var(--ink)}
+.ch{display:flex;align-items:center;gap:18px;padding:20px 4px;border-bottom:1px solid var(--line);transition:color .2s,padding .3s var(--ease)}
+.ch svg.i{flex:none;width:36px;height:36px}
+.ch b{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(24px,3vw,34px);line-height:1}
+.ch small{color:var(--muted);font-size:14px;margin-left:auto}
+.ch .arr{width:20px;height:20px;transition:transform .25s var(--ease)}
+.ch:hover{color:var(--orange);padding-left:14px}
+.ch:hover .arr{transform:translate(3px,-3px)}
+@media (max-width:480px){.ch small{display:none}.ch .arr{margin-left:auto}}
+
+/* Fuß */
+footer{padding:0 0 40px}
+footer .wrap>div{display:flex;flex-wrap:wrap;gap:16px 32px;justify-content:space-between;align-items:center;border-top:3px solid var(--ink);padding-top:20px}
+footer .mark{font-size:22px}
+footer nav{display:flex;gap:24px;color:var(--muted)}
+footer nav a:hover{color:var(--orange)}
+
+/* Blick ins Buch */
+.dlg{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(17,17,17,.45);padding:16px}
+.dlg.open{display:flex;animation:fi .2s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.box{position:relative;width:min(100%,420px);background:#fff;padding:14px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);animation:pop .25s var(--ease)}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+.box .track{box-shadow:none;border:1px solid var(--line);border-radius:0}
+.box .track img{max-height:min(68svh,560px);object-fit:contain;background:#f6f6f6}
+.box-bar{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.ib{width:40px;height:40px;border:1.5px solid var(--ink);display:grid;place-items:center;transition:color .2s,border-color .2s}
+.ib:hover{color:var(--orange);border-color:var(--orange)}
+.x{position:absolute;top:-14px;right:-14px;background:var(--ink);color:#fff;border:0}
+.x:hover{background:var(--orange);color:#fff}
+@media (max-width:480px){.x{top:6px;right:6px}}
+
+.rv{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* Auflösung */
+.sol-grid{display:grid;gap:28px;margin-top:clamp(36px,5vw,56px)}
+@media (min-width:760px){.sol-grid{grid-template-columns:1fr 1fr;gap:40px}}
+.sol-grid figure{max-width:440px;width:100%;margin:0 auto}
+.sol-grid figcaption{margin-top:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="mark" href="../../"><b>9x</b> KLUG</a>
+    <nav class="nav caps"><a href="../../#raetsel">Rätsel</a><a href="../../#buch">Buch</a><a href="../../#kanaele">Kanäle</a></nav>
+  </div>
+</header>
+
+<main>
+<section id="loesung">
+  <div class="wrap">
+    <div class="sh caps rv"><span class="no">01</span>Auflösung</div>
+    <div class="blk rv"><h2>Zahlenreihe 01. <em>Die Auflösung.</em></h2></div>
+    <p class="sub rv">Erst selbst probieren, dann nachschauen.</p>
+    <div class="sol-grid">
+      <figure class="rv"><img class="shot" src="../../assets/r_zahlenreihe01_aufgabe.webp" alt="Rätsel: Zahlenreihe 01" width="720" height="900"><figcaption class="caps">Das Rätsel</figcaption></figure>
+      <figure class="rv"><img class="shot" src="../../assets/r_zahlenreihe01_weg.webp" alt="Lösungsweg: Zahlenreihe 01" width="720" height="900"><figcaption class="caps">Der Lösungsweg</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="book" id="buch">
+  <div class="wrap">
+    <div class="sh caps rv"><span class="no">02</span>Das Buch</div>
+    <div class="blk rv"><h2>Das Leben ist schwer.<br><em>Wortsuche ein bisschen weniger.</em></h2></div>
+    <p class="sub rv">Wörter suchen statt ausrasten.</p>
+    <div class="book-grid">
+      <img class="book-cover shot rv" src="../../assets/cover.webp" alt="Buchcover: 9x KLUG Wortsuche – Wörter suchen statt ausrasten" width="760" height="1169" loading="lazy">
+      <div class="rv">
+        <p>Warteschleifen, Parkplatzsuche, nervige Kollegen und Menschen, die auf „Allen antworten“ klicken. Der Alltag bietet genug Gründe, die Nerven zu verlieren. Dieses Buch bietet eine bessere Alternative: <strong>Wörter suchen statt ausrasten.</strong></p>
+        <p>Statt dich weiter aufzuregen, suchst du die passenden Wörter im Buchstabengitter. Quer, diagonal oder rückwärts. Ganz ohne Beschwerdeformular.</p>
+        <div class="nums"><div><b>200</b><span>Rätsel</span></div><div><b>2.400</b><span>Wörter</span></div><div><b>12</b><span>Wörter pro Rätsel</span></div></div>
+        <p><strong>Endlich mal 200 Probleme, bei denen es eine direkte Lösung gibt!</strong></p>
+        <div class="btns">
+          <a class="btn" href="https://amzn.eu/d/0jdEn5T4" target="_blank" rel="noopener">Bei Amazon ansehen <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <button class="lnk" data-page="0"><span>Blick ins Buch</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="pages-h caps rv"><span>Blick ins Buch</span></div>
+    <div class="pages rv" id="pages"></div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap"><div>
+  <span class="mark"><b>9x</b> KLUG</span>
+  <nav class="caps"><a href="../../impressum.html">Impressum</a><a href="../../datenschutz.html">Datenschutz</a></nav>
+</div></div></footer>
+
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-label="Blick ins Buch">
+  <div class="box">
+    <button class="ib x" id="bClose" aria-label="Schließen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="track" id="bTrack"></div>
+    <div class="box-bar">
+      <button class="ib" id="bPrev" aria-label="Zurück"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <span class="caps" id="bCount" style="color:var(--muted)">1 / 7</span>
+      <button class="ib" id="bNext" aria-label="Weiter"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)},A=function(n){return '../../assets/'+n};
+  var top=$('top'),f=function(){top.classList.toggle('scrolled',scrollY>8)};f();addEventListener('scroll',f,{passive:true});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+  /* Marker: läuft bei jedem Wieder-Erscheinen und bei Menü-Klick neu */
+  function hide(h){h.classList.add('reset');h.classList.remove('mk');void h.offsetWidth;h.classList.remove('reset')}
+  var hold=null;
+  function replay(h){hold=h;hide(h);clearTimeout(h._t);h._t=setTimeout(function(){hold=null;h.classList.add('mk')},650)}
+  var mo=new IntersectionObserver(function(es){es.forEach(function(e){if(e.target===hold)return;if(e.intersectionRatio>=.6)e.target.classList.add('mk');else if(!e.isIntersecting)hide(e.target)})},{threshold:[0,.6]});
+  document.querySelectorAll('h2').forEach(function(h){mo.observe(h)});
+  
+  /* Marker-Zeile passt immer in eine Zeile */
+  function fit(){document.querySelectorAll('h2').forEach(function(h){h.style.fontSize='';var em=h.querySelector('em');if(!em)return;var fs=parseFloat(getComputedStyle(h).fontSize);while(em.offsetWidth>h.clientWidth&&fs>18){fs-=1;h.style.fontSize=fs+'px'}})}
+  fit();addEventListener('resize',fit);if(document.fonts)document.fonts.ready.then(fit);
+
+  function slider(track,onChange){
+    var at=function(){return Math.round(track.scrollLeft/track.clientWidth)};
+    track.addEventListener('scroll',function(){onChange(at())},{passive:true});
+    return {go:function(i,instant){var n=track.children.length;i=Math.max(0,Math.min(n-1,i));track.scrollTo({left:i*track.clientWidth,behavior:instant?'auto':'smooth'})},at:at};
+  }
+
+  /* Buchseiten + Blick ins Buch */
+  var pages=$('pages'),bt=$('bTrack'),N=7;
+  for(var i=1;i<=N;i++){
+    var src=A('seite_'+i+'.webp');
+    var b=document.createElement('button');b.dataset.page=i-1;b.setAttribute('aria-label','Seite '+i+' ansehen');
+    b.innerHTML='<img src="'+src+'" alt="" width="900" height="1350" loading="lazy">';pages.appendChild(b);
+    var im=document.createElement('img');im.src=src;im.alt='Beispielseite '+i;im.width=900;im.height=1350;im.loading='lazy';bt.appendChild(im);
+  }
+  var dlg=$('dlg');
+  var bs=slider(bt,function(k){$('bCount').textContent=(k+1)+' / '+N});
+  function open(k){dlg.classList.add('open');requestAnimationFrame(function(){bs.go(k,true);$('bCount').textContent=(k+1)+' / '+N})}
+  document.querySelectorAll('[data-page]').forEach(function(b){b.addEventListener('click',function(){open(+b.dataset.page)})});
+  function close(){dlg.classList.remove('open')}
+  $('bClose').onclick=close;dlg.addEventListener('click',function(e){if(e.target===dlg)close()});
+  $('bPrev').onclick=function(){bs.go(bs.at()-1)};$('bNext').onclick=function(){bs.go(bs.at()+1)};
+  addEventListener('keydown',function(e){if(!dlg.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowRight')bs.go(bs.at()+1);if(e.key==='ArrowLeft')bs.go(bs.at()-1)});
+})();
+</script>
+
+<script data-goatcounter="https://9xklug.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://9xklug.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
