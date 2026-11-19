@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Werkstatt – Lösung veröffentlichen</title>
+<style>
+@font-face{font-family:Anton;src:url(/assets/Anton-Regular.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Inter;src:url(/assets/Inter-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Inter;src:url(/assets/Inter-SemiBold.woff2) format("woff2");font-weight:600;font-display:swap}
+:root{--ink:#111;--muted:#6b6b6b;--line:#e4e4e4;--orange:#F05A28;--ok:#1d8a4b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:var(--ink);font:400 16px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px 60px}
+a{color:inherit;text-decoration:none}
+.mark{font-family:Anton,sans-serif;font-size:24px;line-height:1}.mark b{font-weight:400;color:var(--orange)}
+h1{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;font-size:34px;line-height:1.1;background:var(--ink);color:#fff;padding:16px 18px;margin:18px 0 6px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+.caps{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.step{border-top:3px solid var(--ink);padding:14px 0 20px}
+.step .caps{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.no{display:grid;place-items:center;width:28px;height:28px;background:var(--ink);color:#fff;font-family:Anton,sans-serif;font-size:14px;letter-spacing:0}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pick{position:relative;display:grid;place-items:center;aspect-ratio:4/5;border:2px dashed #cfcfcf;color:var(--muted);text-align:center;font-size:13px;cursor:pointer;overflow:hidden;padding:8px}
+.pick.has{border:0;box-shadow:0 1px 2px rgba(0,0,0,.06),0 10px 24px -12px rgba(0,0,0,.3)}
+.pick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pick input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.pick b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+input[type=text],input[type=password]{width:100%;height:48px;border:1.5px solid var(--ink);padding:0 14px;font:inherit;border-radius:0;background:#fff}
+input:focus{outline:2px solid var(--orange);outline-offset:1px}
+.hint{color:var(--muted);font-size:13px;margin-top:8px;word-break:break-all}
+.hint b{color:var(--ink)}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:56px;background:var(--ink);color:#fff;border:0;font:600 13px Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.btn:hover{background:var(--orange)}
+.btn[disabled]{background:#bbb;cursor:default}
+.btn.sec{background:#fff;color:var(--ink);border:1.5px solid var(--ink);height:44px}
+.status{margin-top:18px;padding:14px 16px;background:#f5f5f5;font-size:14px;display:none}
+.status.on{display:block}
+.status.err{background:#fdecea;color:#a12a12}
+.status.done{background:#e8f5ec}
+.link{display:flex;gap:8px;margin-top:10px}
+.link input{flex:1;height:44px;font-size:14px}
+.link button{height:44px;padding:0 14px;background:var(--ink);color:#fff;border:0;font:600 12px Inter;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+details{margin-top:34px;border-top:1px solid var(--line);padding-top:14px}
+summary{cursor:pointer;color:var(--muted)}
+details .row{display:flex;gap:8px;margin-top:12px}
+details .row input{flex:1}
+details .row button{width:auto;padding:0 16px;height:48px}
+.spin{width:16px;height:16px;border:2px solid #999;border-top-color:transparent;border-radius:50%;display:inline-block;vertical-align:-3px;margin-right:8px;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="mark" href="/"><b>9x</b> KLUG</a>
+  <h1>Lösung veröffentlichen</h1>
+  <p class="sub">Rätsel + Lösungsweg hochladen, Link kopieren, fertig.</p>
+
+  <div class="step">
+    <div class="caps"><span class="no">1</span>Bilder</div>
+    <div class="pics">
+      <label class="pick" id="pA"><span><b>Rätselbild</b>antippen zum Auswählen</span><input type="file" accept="image/*" id="fA"></label>
+      <label class="pick" id="pW"><span><b>Lösungsweg</b>antippen zum Auswählen</span><input type="file" accept="image/*" id="fW"></label>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="caps"><span class="no">2</span>Name</div>
+    <input type="text" id="name" placeholder="z. B. Zahlenreihe 02" autocomplete="off">
+    <p class="hint" id="urlHint">Rätselart + zweistellige Nummer, z. B. „Zahlenreihe 02“ oder „Waage 01“.</p>
+  </div>
+
+  <div class="step">
+    <div class="caps"><span class="no">3</span>Veröffentlichen</div>
+    <button class="btn" id="go" disabled>Veröffentlichen</button>
+    <div class="status" id="st"></div>
+  </div>
+
+  <details id="set">
+    <summary class="caps">Einstellungen · GitHub-Schlüssel</summary>
+    <p class="hint">Der Schlüssel wird nur in diesem Browser gespeichert. Er braucht Zugriff auf das Repo <b>x-klug-webseite</b> mit „Contents: Read and write“.</p>
+    <div class="row"><input type="password" id="tok" placeholder="github_pat_…" autocomplete="off"><button class="btn sec" id="tokSave">Speichern</button></div>
+    <p class="hint" id="tokSt"></p>
+  </details>
+</div>
+
+<script>
+(function(){
+  var OWNER='9xKLUG',REPO='x-klug-webseite',BRANCH='main',SITE='https://9x-klug.de';
+  var $=function(id){return document.getElementById(id)};
+  var store={get:function(k){try{return localStorage.getItem(k)||''}catch(e){return ''}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+  var files={A:null,W:null};
+
+  /* ---------- Bilder auswählen ---------- */
+  function pick(key,input,box){
+    input.addEventListener('change',function(){
+      var f=input.files[0];if(!f)return;files[key]=f;
+      var old=box.querySelector('img');if(old)old.remove();
+      var im=document.createElement('img');im.src=URL.createObjectURL(f);box.insertBefore(im,input);
+      box.classList.add('has');check();
+    });
+  }
+  pick('A',$('fA'),$('pA'));pick('W',$('fW'),$('pW'));
+
+  /* ---------- Name → Adresse ---------- */
+  function slug(s){return s.toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[^a-z0-9]+/g,'')}
+  $('name').addEventListener('input',function(){
+    var s=slug(this.value);
+    $('urlHint').innerHTML=s?'Adresse: <b>9x-klug.de/loesung/'+s+'/<\/b>':'Rätselart + zweistellige Nummer, z. B. „Zahlenreihe 02“ oder „Waage 01“.';
+    check();
+  });
+  function check(){$('go').disabled=!(files.A&&files.W&&slug($('name').value))}
+
+  /* ---------- Schlüssel ---------- */
+  $('tok').value=store.get('gh_token');
+  if(!store.get('gh_token'))$('set').open=true;
+  $('tokSave').onclick=function(){
+    var t=$('tok').value.trim();store.set('gh_token',t);$('tokSt').textContent='Prüfe …';
+    api('GET','/repos/'+OWNER+'/'+REPO).then(function(r){
+      $('tokSt').textContent=r.permissions&&r.permissions.push?'✓ Schlüssel funktioniert.':'Schlüssel gefunden, aber ohne Schreibrecht.';
+    }).catch(function(e){$('tokSt').textContent='✗ '+e.message});
+  };
+
+  function api(method,path,body){
+    var t=store.get('gh_token');if(!t)return Promise.reject(new Error('Kein GitHub-Schlüssel gespeichert (unten unter Einstellungen).'));
+    return fetch('https://api.github.com'+path,{method:method,headers:{'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json'},body:body?JSON.stringify(body):undefined})
+      .then(function(r){
+        if(r.status===404&&method==='GET')return null;
+        if(r.status===401)throw new Error('Schlüssel ungültig oder abgelaufen.');
+        if(r.status===403)throw new Error('Schlüssel hat keine Berechtigung für dieses Repo.');
+        if(!r.ok)return r.text().then(function(t){throw new Error('GitHub-Fehler '+r.status+': '+t.slice(0,140))});
+        return r.json();
+      });
+  }
+
+  /* ---------- Bild verkleinern (720 × 900) ---------- */
+  function convert(file){
+    return new Promise(function(res,rej){
+      var im=new Image();
+      im.onload=function(){
+        var W=720,H=900,c=document.createElement('canvas');c.width=W;c.height=H;
+        var x=c.getContext('2d'),s=Math.max(W/im.width,H/im.height),w=im.width*s,h=im.height*s;
+        x.fillStyle='#fff';x.fillRect(0,0,W,H);x.drawImage(im,(W-w)/2,(H-h)/2,w,h);
+        c.toBlob(function(b){
+          if(b&&b.type==='image/webp')return res({blob:b,ext:'webp'});
+          c.toBlob(function(j){j?res({blob:j,ext:'jpg'}):rej(new Error('Bild konnte nicht umgewandelt werden.'))},'image/jpeg',.88);
+        },'image/webp',.86);
+      };
+      im.onerror=function(){rej(new Error('Bild konnte nicht gelesen werden.'))};
+      im.src=URL.createObjectURL(file);
+    });
+  }
+  function b64(blob){return new Promise(function(res){var r=new FileReader();r.onload=function(){res(r.result.split(',')[1])};r.readAsDataURL(blob)})}
+  function b64text(s){var b=new TextEncoder().encode(s),o='';for(var i=0;i<b.length;i+=8192)o+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(o)}
+  function unb64(s){var bin=atob(s.replace(/\n/g,'')),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new TextDecoder().decode(a)}
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/\x3c/g,'&lt;').replace(/"/g,'&quot;')}
+  function cut(src,a,b,what){var i=src.indexOf(a),j=src.indexOf(b,i+1);if(i<0||j<0)throw new Error('Startseite hat sich verändert ('+what+' nicht gefunden). Bitte Claude Bescheid geben.');return src.slice(i,j)}
+
+  /* ---------- Seite aus der aktuellen Startseite bauen ---------- */
+  function buildPage(src,title,s,extA,extW,stamp){
+    var css=cut(src,'<style>','<\/style>','Gestaltung')+'<\/style>';
+    css=css.split('url(assets/').join('url(/assets/');
+    css=css.replace('<\/style>','.sol-grid{display:grid;gap:28px;margin-top:clamp(36px,5vw,56px)}\n@media (min-width:760px){.sol-grid{grid-template-columns:1fr 1fr;gap:40px}}\n.sol-grid figure{max-width:440px;width:100%;margin:0 auto}\n.sol-grid figcaption{margin-top:14px;color:var(--muted)}\n<\/style>');
+    var book=cut(src,'<section class="book" id="buch">','<section id="kanaele">','Buch-Bereich').split('"assets/').join('"/assets/');
+    var foot=cut(src,'<footer>','<script>','Fußzeile').split('href="impressum.html"').join('href="/impressum.html"').split('href="datenschutz.html"').join('href="/datenschutz.html"');
+    var js=cut(src,'<script>','<\/script>','Skript')+'<\/script>';
+    var a=js.indexOf('  /* Rätsel */'),b=js.indexOf('  /* Buchseiten');
+    if(a<0||b<0)throw new Error('Startseite hat sich verändert (Skript-Teile nicht gefunden). Bitte Claude Bescheid geben.');
+    js=js.slice(0,a)+js.slice(b);
+    js=js.replace(/A=window\.A\|\|function\(n\)\{return 'assets\/'\+n\}/,"A=function(n){return '/assets/'+n}");
+    var t=esc(title),url=SITE+'/loesung/'+s+'/';
+    return '<!DOCTYPE html>\n<html lang="de">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'+
+      '<title>Auflösung: '+t+' – 9x KLUG<\/title>\n'+
+      '<meta name="description" content="Auflösung und Lösungsweg zum Rätsel '+t+' von 9x KLUG. Endlich lösbare Probleme.">\n'+
+      '<meta property="og:title" content="Auflösung: '+t+' – 9x KLUG">\n<meta property="og:type" content="website">\n<meta property="og:url" content="'+url+'">\n<meta property="og:image" content="'+url+'aufgabe.'+extA+'">\n'+
+      '<meta name="theme-color" content="#ffffff">\n<meta name="9xklug-stand" content="'+stamp+'">\n'+css+'\n<\/head>\n<body>\n\n'+
+      '<header class="top" id="top">\n  <div class="wrap">\n    <a class="mark" href="/"><b>9x<\/b> KLUG<\/a>\n    <nav class="nav caps"><a href="/#raetsel">Rätsel<\/a><a href="/#buch">Buch<\/a><a href="/#kanaele">Kanäle<\/a><\/nav>\n  <\/div>\n<\/header>\n\n<main>\n'+
+      '<section id="loesung">\n  <div class="wrap">\n    <div class="sh caps rv"><span class="no">01<\/span>Auflösung<\/div>\n    <div class="blk rv"><h2>'+t+'. <em>Die Auflösung.<\/em><\/h2><\/div>\n    <p class="sub rv">Erst selbst probieren, dann nachschauen.<\/p>\n    <div class="sol-grid">\n'+
+      '      <figure class="rv"><img class="shot" src="aufgabe.'+extA+'" alt="Rätsel: '+t+'" width="720" height="900"><figcaption class="caps">Das Rätsel<\/figcaption><\/figure>\n'+
+      '      <figure class="rv"><img class="shot" src="weg.'+extW+'" alt="Lösungsweg: '+t+'" width="720" height="900"><figcaption class="caps">Der Lösungsweg<\/figcaption><\/figure>\n'+
+      '    <\/div>\n  <\/div>\n<\/section>\n\n'+book+'<\/main>\n\n'+foot+js+'\n\n<script data-goatcounter="https://9xklug.goatcounter.com/count" async src="//gc.zgo.at/count.js"><\/script>\n<\/body>\n<\/html>\n';
+  }
+
+  /* ---------- Veröffentlichen ---------- */
+  var st=$('st');
+  function show(html,cls){st.className='status on'+(cls?' '+cls:'');st.innerHTML=html}
+  function wait(msg){show('<span class="spin"><\/span>'+msg)}
+
+  $('go').onclick=function(){
+    var title=$('name').value.trim().replace(/\s+/g,' '),s=slug(title),dir='loesung/'+s;
+    var R='/repos/'+OWNER+'/'+REPO,stamp=String(Date.now());
+    $('go').disabled=true;
+    wait('Prüfe, ob es „'+s+'“ schon gibt …');
+    api('GET',R+'/contents/'+dir+'?ref='+BRANCH).then(function(ex){
+      if(ex&&!confirm('„'+s+'“ gibt es schon. Alte Seite ersetzen?'))throw new Error('abgebrochen');
+      wait('Bilder werden vorbereitet …');
+      return Promise.all([convert(files.A),convert(files.W),api('GET',R+'/contents/index.html?ref='+BRANCH),api('GET',R+'/git/ref/heads/'+BRANCH),ex]);
+    }).then(function(r){
+      var A=r[0],W=r[1],home=unb64(r[2].content),ref=r[3],ex=r[4]||[];
+      var html=buildPage(home,title,s,A.ext,W.ext,stamp);
+      wait('Wird hochgeladen …');
+      return Promise.all([b64(A.blob),b64(W.blob)]).then(function(d){
+        return Promise.all([
+          api('POST',R+'/git/blobs',{content:d[0],encoding:'base64'}),
+          api('POST',R+'/git/blobs',{content:d[1],encoding:'base64'}),
+          api('POST',R+'/git/blobs',{content:b64text(html),encoding:'base64'}),
+          api('GET',R+'/git/commits/'+ref.object.sha)
+        ]);
+      }).then(function(b){
+        var keep={'index.html':1};keep['aufgabe.'+A.ext]=1;keep['weg.'+W.ext]=1;
+        var tree=[
+          {path:dir+'/aufgabe.'+A.ext,mode:'100644',type:'blob',sha:b[0].sha},
+          {path:dir+'/weg.'+W.ext,mode:'100644',type:'blob',sha:b[1].sha},
+          {path:dir+'/index.html',mode:'100644',type:'blob',sha:b[2].sha}
+        ];
+        /* alte Bilder mit anderer Endung entfernen */
+        (Array.isArray(ex)?ex:[]).forEach(function(f){if(f.type==='file'&&!keep[f.name])tree.push({path:f.path,mode:'100644',type:'blob',sha:null})});
+        return api('POST',R+'/git/trees',{base_tree:b[3].tree.sha,tree:tree}).then(function(t){
+          return api('POST',R+'/git/commits',{message:'Lösung: '+title,tree:t.sha,parents:[ref.object.sha]});
+        }).then(function(c){return api('PATCH',R+'/git/refs/heads/'+BRANCH,{sha:c.sha})});
+      });
+    }).then(function(){
+      var url=SITE+'/loesung/'+s+'/',n=0;
+      wait('Hochgeladen. Warte, bis die Seite online ist (1 bis 2 Minuten) …');
+      (function poll(){
+        fetch('/loesung/'+s+'/?v='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).catch(function(){return ''}).then(function(t){
+          if(t.indexOf(stamp)>-1)return done(url,true);
+          if(++n>36)return done(url,false);
+          setTimeout(poll,5000);
+        });
+      })();
+    }).catch(function(e){
+      if(e.message==='abgebrochen')st.className='status';else show('✗ '+e.message,'err');
+      check();
+    });
+  };
+
+  function done(url,ok){
+    show((ok?'<b>Online ✓<\/b>':'<b>Hochgeladen ✓<\/b> Online ist sie wohl gleich, GitHub braucht heute etwas länger.')+
+      '<div class="link"><input type="text" id="lnk" readonly value="'+url+'"><button id="cp">Kopieren<\/button><\/div>'+
+      '<p class="hint"><a href="'+url+'" target="_blank" style="text-decoration:underline">Seite öffnen<\/a><\/p>','done');
+    $('cp').onclick=function(){
+      var i=$('lnk');i.select();
+      (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).catch(function(){document.execCommand('copy')}).then(function(){$('cp').textContent='Kopiert ✓'});
+    };
+    check();
+  }
+})();
+</script>
+</body>
+</html>
